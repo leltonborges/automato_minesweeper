@@ -1,0 +1,7 @@
+application:
+  name: Minefield
+  description: Gamer Minefield
+server:
+  port: 8090
+  host: localhost
+  context: /v1
