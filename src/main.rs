@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::api::api_config;
 use crate::minesweeper::resource::minesweeper_scope;
-use crate::property::load_properties;
+use crate::property::Config;
 
 pub mod minesweeper;
 mod property;
@@ -15,7 +15,7 @@ pub mod constant;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let config = load_properties().expect("Failed to load configuration.");
+    let config = Config::get_properties();
     HttpServer::new(move|| {
         App::new()
             .wrap_api_with_spec(api_config())

@@ -5,3 +5,12 @@ server:
   port: 8090
   host: localhost
   context: /v1
+minesweeper:
+    start:
+      row: 0
+      col: 0
+    width: 5
+    height: 5
+    num_mines: 3
+    num_hints: 3
+    num_blocks: 3

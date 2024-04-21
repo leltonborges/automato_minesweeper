@@ -4,10 +4,12 @@ use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use paperclip::actix::Apiv2Schema;
 use rand::{Rng, thread_rng};
 use serde::{Deserialize, Serialize};
-use serde_valid::{Validate};
+use serde_valid::Validate;
 
 use crate::constant::MOVEMENTS;
 use crate::minesweeper::board::CellContent::{Block, Free, Hint, Mine, Treasure};
+use crate::minesweeper::node::Node;
+use crate::property::Config;
 
 #[derive(Ord, Debug, Clone, Serialize, Deserialize, Apiv2Schema, Eq, PartialOrd, PartialEq)]
 enum CellContent {
@@ -21,8 +23,8 @@ enum CellContent {
 #[derive(Ord, Debug, Clone, Serialize, Deserialize, Apiv2Schema, Eq, PartialOrd, PartialEq)]
 pub(crate) struct Cell {
     content: CellContent,
-    row: usize,
-    col: usize,
+    pub(crate) row: usize,
+    pub(crate) col: usize,
     revealed: bool,
     cell_num_mines: usize,
     cell_num_hints: usize,
@@ -46,6 +48,7 @@ enum MoveAction {
 #[derive(Debug, Serialize, Deserialize, Apiv2Schema)]
 pub struct Minesweeper {
     grid: Vec<Vec<Cell>>,
+    current: Cell,
     steps: usize,
     paths: BTreeSet<Cell>,
     config: ConfigMinesweeper,
@@ -75,6 +78,7 @@ impl Clone for Minesweeper {
     fn clone(&self) -> Self {
         Minesweeper {
             grid: self.grid.clone(),
+            current: self.current.clone(),
             steps: self.steps,
             paths: self.paths.clone(),
             config: self.config.clone(),
@@ -84,7 +88,7 @@ impl Clone for Minesweeper {
 }
 
 impl Cell {
-    fn new(content: CellContent, row: usize, col: usize) -> Self {
+    pub(crate) fn new(content: CellContent, row: usize, col: usize) -> Self {
         Cell {
             content,
             row,
@@ -96,8 +100,13 @@ impl Cell {
         }
     }
 
-    fn new_free(row: usize, col: usize) -> Self {
+    pub(crate) fn new_free(row: usize, col: usize) -> Self {
         Cell::new(Free, row, col)
+    }
+
+    fn reveal(&mut self) -> Self {
+        self.revealed = true;
+        self.to_owned()
     }
 }
 
@@ -130,11 +139,13 @@ impl GameTimer {
 
 impl Minesweeper {
     fn new(grid: Vec<Vec<Cell>>,
+           start: Cell,
            paths: BTreeSet<Cell>,
            config: ConfigMinesweeper,
            timer: GameTimer) -> Self {
         Minesweeper {
             grid,
+            current: start,
             steps: 0,
             paths,
             config,
@@ -142,17 +153,24 @@ impl Minesweeper {
         }
     }
 
-    pub fn new_random(config: ConfigMinesweeper,
-    ) -> Self {
+    fn get_start() -> Cell {
+        let properties = Config::get_properties().minesweeper();
+        let mut cell = Cell::new_free(properties.start.row, properties.start.col);
+        cell.reveal()
+    }
+
+    pub fn new_random(config: ConfigMinesweeper) -> Self {
         let grid = create_grid(config.height, config.width);
 
         let timer = GameTimer {
             start_time: None,
             end_time: None,
         };
+        let properties = Config::get_properties().minesweeper();
 
         let mut game = Minesweeper {
             grid,
+            current: Self::get_start(),
             steps: 0,
             paths: BTreeSet::new(),
             config,
@@ -264,6 +282,26 @@ impl Minesweeper {
 
     fn is_valid_position(&self, row: usize, col: usize) -> bool {
         return row < self.config.height && col < self.config.width;
+    }
+
+    fn is_valid_movement(&self, new_row: usize, new_col: usize) -> bool {
+        if !self.is_valid_position(new_row, new_col) {
+            return false;
+        }
+
+        let Cell { row, col, .. } = self.current;
+        let sub_row = row as i8 - new_row as i8;
+        let sub_col = col as i8 - new_col as i8;
+        sub_row.abs() <= 1 && sub_col.abs() <= 1 && (sub_row != 0 || sub_col != 0)
+    }
+
+    fn move_to(&mut self, new_row: usize, new_col: usize) {
+        if self.is_valid_movement(new_row, new_col) {
+            self.current = self.grid[new_row][new_col].clone();
+            self.steps += 1;
+            self.paths.insert(self.current.clone());
+            self.grid[new_row][new_col].revealed = true;
+        }
     }
 }
 
