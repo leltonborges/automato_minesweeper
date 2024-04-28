@@ -3,7 +3,7 @@
     <mat-toolbar class="toolbar-header">
       <button mat-icon-button
               aria-label="Icone do menu"
-              (click)="chargeStatusMenu()">
+              (click)="drawer.toggle()">
         @if (!isMenuOpen) {
           <mat-icon aria-hidden="false"
                     aria-label="Icone do menu"
@@ -14,13 +14,13 @@
                     fontIcon="close"></mat-icon>
         }
       </button>
-      <span>Minefiled</span>
+      <span>Minefield</span>
     </mat-toolbar>
   </header>
   <mat-drawer-container class="grid-content">
-    <mat-drawer mode="side"
-                class="drawer-side"
-                [opened]="isMenuOpen">
+    <mat-drawer #drawer
+                mode="side"
+                class="drawer-side">
       <app-menu class="drawer-side"></app-menu>
     </mat-drawer>
     <mat-drawer-content class="drawer-content">Main content</mat-drawer-content>
