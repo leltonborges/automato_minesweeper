@@ -1,29 +1,25 @@
 import { Component, Input } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
-
-import { MenuComponent } from './components/core/menu/menu.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-menu',
   standalone: true,
-             imports: [
-               RouterOutlet,
-               MatIconModule,
-               MatToolbarModule,
-               MatSidenavModule,
-               MatButtonModule,
-               MenuComponent,
-             ],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.sass',
+  imports: [
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatMenuModule
+  ],
+  templateUrl: './menu.component.html',
+  styleUrl: './menu.component.sass',
 })
-export class AppComponent {
+export class MenuComponent {
   private _isMenuOpen: boolean;
-
 
   constructor() {
     this._isMenuOpen = false;
@@ -40,5 +36,6 @@ export class AppComponent {
 
   chargeStatusMenu(): void {
     this._isMenuOpen = !this._isMenuOpen;
+    console.log(`Is: ${ this.isMenuOpen }`);
   }
 }
