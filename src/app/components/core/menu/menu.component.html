@@ -1,27 +1,34 @@
 <nav class="nav-menu">
-    <button mat-button
-            #isAction>
-      <mat-icon aria-hidden="false"
-                aria-label="Menu home"
-                fontIcon="home"></mat-icon>
-      Home
-    </button>
-    <button mat-button>
-      <mat-icon aria-hidden="false"
-                aria-label="Menu play"
-                fontIcon="play_arrow"></mat-icon>
-      Play
-    </button>
-    <button mat-button>
-      <mat-icon aria-hidden="false"
-                aria-label="Menu tree play"
-                fontIcon="account_tree"></mat-icon>
-      Tree
-    </button>
-    <button mat-button>
-      <mat-icon aria-hidden="false"
-                aria-label="Menu settings"
-                fontIcon="settings"></mat-icon>
-      Issuer
-    </button>
+  <button mat-button
+          #matButtonHome
+          (click)="setAnimationIcon(matButtonHome, faIconMenu, 'beat-fade')">
+    <fa-icon #faIconMenu
+             [icon]="['fas', 'home']"
+             size="xl"></fa-icon>
+    Home
+  </button>
+  <button mat-button
+          #matButtonPlay
+          (click)="setAnimationIcon(matButtonPlay, faIconPlay, 'bounce')">
+    <fa-icon #faIconPlay
+             [icon]="['fas', 'bomb']"
+             size="xl"></fa-icon>
+    Play
+  </button>
+  <button mat-button
+          #matButtonTree
+          (click)="setAnimationIcon(matButtonTree, faIconTree, 'flip')">
+    <fa-icon #faIconTree
+             [icon]="['fas', 'share-nodes']"
+             size="xl"></fa-icon>
+    Nodes
+  </button>
+  <button mat-button
+          #matButtonIssuer
+          (click)="setAnimationIcon(matButtonIssuer, faIconIssuer, 'spin')">
+    <fa-icon #faIconIssuer
+             [icon]="['fas', 'gears']"
+             size="xl"></fa-icon>
+    Issuer
+  </button>
 </nav>
