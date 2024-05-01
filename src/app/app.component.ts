@@ -1,15 +1,18 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
+import { FaIconComponent, FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
 
 import { MenuComponent } from './components/core/menu/menu.component';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
+             selector: 'app-root',
+             standalone: true,
              imports: [
                RouterOutlet,
                MatIconModule,
@@ -17,28 +20,28 @@ import { MenuComponent } from './components/core/menu/menu.component';
                MatSidenavModule,
                MatButtonModule,
                MenuComponent,
+               FaIconComponent,
+               FontAwesomeModule
              ],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.sass',
-})
+             templateUrl: './app.component.html',
+             styleUrl: './app.component.sass'
+           })
 export class AppComponent {
   private _isMenuOpen: boolean;
 
 
-  constructor() {
+  constructor(library: FaIconLibrary) {
     this._isMenuOpen = false;
+    library.addIconPacks(fas, far)
   }
 
   get isMenuOpen(): boolean {
     return this._isMenuOpen;
   }
 
-  @Input('toggle')
-  set isMenuOpen(value: boolean) {
-    this._isMenuOpen = value;
-  }
 
-  chargeStatusMenu(): void {
-    this._isMenuOpen = !this._isMenuOpen;
+  toggleResult(drawer: MatDrawer) {
+    drawer.toggle()
+          .then(t => this._isMenuOpen = t == 'open');
   }
 }
