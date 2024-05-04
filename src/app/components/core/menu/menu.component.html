@@ -1,34 +1,23 @@
 <nav class="nav-menu">
-  <button mat-button
-          #matButtonHome
-          (click)="setAnimationIcon(matButtonHome, faIconMenu, 'beat-fade')">
-    <fa-icon #faIconMenu
-             [icon]="['fas', 'home']"
-             size="xl"></fa-icon>
-    Home
-  </button>
-  <button mat-button
-          #matButtonPlay
-          (click)="setAnimationIcon(matButtonPlay, faIconPlay, 'bounce')">
-    <fa-icon #faIconPlay
-             [icon]="['fas', 'bomb']"
-             size="xl"></fa-icon>
-    Play
-  </button>
-  <button mat-button
-          #matButtonTree
-          (click)="setAnimationIcon(matButtonTree, faIconTree, 'flip')">
-    <fa-icon #faIconTree
-             [icon]="['fas', 'share-nodes']"
-             size="xl"></fa-icon>
-    Nodes
-  </button>
-  <button mat-button
-          #matButtonIssuer
-          (click)="setAnimationIcon(matButtonIssuer, faIconIssuer, 'spin')">
-    <fa-icon #faIconIssuer
-             [icon]="['fas', 'gears']"
-             size="xl"></fa-icon>
-    Issuer
-  </button>
+  <app-button-menu animationType="beat-fade"
+                   class="active"
+                   [icon]="['fas', 'home']"
+                   [routerLink]="['/home']"
+                   routerLinkActive="active"
+                   label="Home"></app-button-menu>
+  <app-button-menu animationType="bounce"
+                   [icon]="['fas', 'bomb']"
+                   [routerLink]="['/minefield']"
+                   routerLinkActive="active"
+                   label="Play"></app-button-menu>
+  <app-button-menu animationType="flip"
+                   [icon]="['fas', 'sitemap']"
+                   [routerLink]="['/minefield']"
+                   routerLinkActive="active"
+                   label="Nodes"></app-button-menu>
+  <app-button-menu animationType="spin"
+                   [icon]="['fas', 'gears']"
+                   [routerLink]="['/minefield']"
+                   routerLinkActive="active"
+                   label="Issuer"></app-button-menu>
 </nav>
