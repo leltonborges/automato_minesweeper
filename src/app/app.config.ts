@@ -8,7 +8,8 @@ import { minefieldRoutes } from './components/minefield/minefield.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter([...mainRoutes, ...minefieldRoutes]),
+    // provideRouter([...mainRoutes, ...minefieldRoutes]),
+    provideRouter(mainRoutes),
     provideClientHydration(),
     provideAnimationsAsync()
   ]

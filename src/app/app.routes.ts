@@ -5,10 +5,16 @@ export const mainRoutes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'home'
+    redirectTo: 'home',
   },
   {
     path: 'home',
-    component: HomeComponent
-  }
+    component: HomeComponent,
+  },
+  {
+    path: 'minefield',
+    loadChildren: () =>
+      import('./components/minefield/minefield.routes')
+            .then((router) => router.minefieldRoutes),
+  },
 ];

@@ -1,9 +1,8 @@
 import { Routes } from '@angular/router';
-import { BoardComponent } from './board/board.component';
 
 export const minefieldRoutes: Routes = [
   {
-    path: 'minefield',
+    path: '',
     children: [
       {
         path: '',
@@ -11,8 +10,20 @@ export const minefieldRoutes: Routes = [
         redirectTo: 'play',
       },
       {
-      path: 'play',
-      component: BoardComponent
-    }]
+        path: 'play',
+        loadComponent: () =>
+          import('./board/board.component').then((mod) => mod.BoardComponent),
+      },
+      {
+        path: 'tree',
+        loadComponent: () =>
+          import('./tree/tree.component').then((mod) => mod.TreeComponent),
+      },
+      {
+        path: 'settings',
+        loadComponent: () =>
+          import('./settings/settings.component').then((mod) => mod.SettingsComponent),
+      },
+    ],
   },
 ];
