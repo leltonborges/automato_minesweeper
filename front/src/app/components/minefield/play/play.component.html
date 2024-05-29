@@ -1,0 +1,16 @@
+<section>
+   <div class="grid-container">
+    @for (row of rowsArray; track row; let rowIndex = $index) {
+      <div class="row">
+        @for (col of colsArray; track col; let colIndex = $index) {
+          <div class="col movendo-div"
+               [class.dragging]="isDragging"
+               (mousedown)="onMouseDown($event, {row, col})"
+               (mouseup)="onMouseUp($event,  {row, col})">
+<!--            {{ rowIndex }},{{ colIndex }}-->
+          </div>
+        }
+      </div>
+    }
+  </div>
+</section>

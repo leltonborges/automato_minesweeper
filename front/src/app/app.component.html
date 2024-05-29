@@ -1,0 +1,35 @@
+<main class="d-grid">
+  <header class="grid-header">
+    <mat-toolbar class="toolbar-header">
+      <button mat-icon-button
+              aria-label="Icone do menu"
+              (click)="toggleResult(drawer)">
+        @if (isMenuOpen) {
+          <mat-icon aria-hidden="false"
+          aria-label="Icone de fechar"
+          fontIcon="close"></mat-icon>
+        } @else {
+          <mat-icon aria-hidden="false"
+                    aria-label="Icone do menu"
+                    fontIcon="menu"></mat-icon>
+        }
+      </button>
+      <span>Minefield</span>
+      <fa-icon [icon]="['fas', 'bomb']"
+               animation="beat"
+               size="lg"></fa-icon>
+    </mat-toolbar>
+  </header>
+  <mat-drawer-container class="grid-content">
+    <mat-drawer #drawer
+                mode="side"
+                class="drawer-side">
+      <app-menu class="drawer-side"></app-menu>
+    </mat-drawer>
+    <mat-drawer-content class="drawer-content">
+      <router-outlet></router-outlet>
+    </mat-drawer-content>
+  </mat-drawer-container>
+  <footer class="grid-footer">footer</footer>
+</main>
+

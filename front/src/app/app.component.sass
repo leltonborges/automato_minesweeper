@@ -1,0 +1,40 @@
+@import "../var"
+
+.d-grid
+  display: grid
+  grid-template-areas:  "header header header header header" "content content content content content" "footer footer footer footer footer"
+  grid-template-columns: $grid-size-menu repeat(4, 1fr)
+  grid-template-rows: 64px auto 50px
+  height: 100vh
+
+.grid-header
+  grid-area: header
+  height: 100%
+
+  span
+    margin: 0 10px
+
+.grid-menu
+  grid-area: menu
+
+.grid-content
+  grid-area: content
+
+.grid-footer
+  grid-area: footer
+
+.drawer-side
+  max-width: $grid-size-menu
+  min-width: 200px
+  height: 100%
+  padding: 5px
+  border-right: 0
+  border-radius: 0 20px 20px 0
+
+.drawer-content
+  padding: 15px
+  max-height: 100%
+
+.toolbar-header
+  height: 100%
+
