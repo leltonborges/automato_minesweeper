@@ -12,7 +12,7 @@ export const minefieldRoutes: Routes = [
       {
         path: 'play',
         loadComponent: () =>
-          import('./board/board.component').then((mod) => mod.BoardComponent),
+          import('./play/play.component').then((mod) => mod.PlayComponent),
       },
       {
         path: 'tree',
