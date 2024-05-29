@@ -13,7 +13,7 @@ pub fn api_config() -> Api<DefaultParameterRaw, DefaultResponseRaw, DefaultSchem
             external_docs: None,
         },
         Tag {
-            name: "Cats".to_string(),
+            name: "Tree".to_string(),
             description: Some("Images of cats".to_string()),
             external_docs: None,
         },

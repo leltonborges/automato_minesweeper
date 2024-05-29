@@ -1,11 +1,8 @@
-use std::ops::Deref;
-
 use actix_web::{App, HttpServer};
 use paperclip::actix::OpenApiExt;
-use serde::{Deserialize, Serialize};
 
 use crate::api::api_config;
-use crate::minesweeper::resource::minesweeper_scope;
+use crate::minesweeper::resource::{minesweeper_scope};
 use crate::property::Config;
 
 pub mod minesweeper;

@@ -8,11 +8,10 @@ use serde_valid::Validate;
 
 use crate::constant::MOVEMENTS;
 use crate::minesweeper::board::CellContent::{Block, Free, Hint, Mine, Treasure};
-use crate::minesweeper::node::Node;
-use crate::property::Config;
+use crate::property::{Config, MinesweeperDefault};
 
-#[derive(Ord, Debug, Clone, Serialize, Deserialize, Apiv2Schema, Eq, PartialOrd, PartialEq)]
-enum CellContent {
+#[derive(Debug, Clone, Serialize, Deserialize, Apiv2Schema, Ord, Eq, PartialOrd, PartialEq)]
+pub enum CellContent {
     Treasure,
     Mine,
     Block,
@@ -20,25 +19,26 @@ enum CellContent {
     Free,
 }
 
-#[derive(Ord, Debug, Clone, Serialize, Deserialize, Apiv2Schema, Eq, PartialOrd, PartialEq)]
-pub(crate) struct Cell {
-    content: CellContent,
-    pub(crate) row: usize,
-    pub(crate) col: usize,
-    revealed: bool,
-    cell_num_mines: usize,
-    cell_num_hints: usize,
-    cell_num_block: usize,
+#[derive(Debug, Clone, Serialize, Deserialize, Apiv2Schema, Ord, PartialOrd, Eq, PartialEq)]
+pub struct Cell {
+    pub content: CellContent,
+    pub row: usize,
+    pub col: usize,
+    pub revealed: bool,
+    pub cell_num_mines: usize,
+    pub cell_num_hints: usize,
+    pub cell_num_block: usize,
+    pub neighbors: BTreeSet<Cell>
 }
 
-#[derive(Ord, Debug, Clone, Serialize, Deserialize, Apiv2Schema, Eq, PartialOrd, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, Apiv2Schema)]
 struct Move {
     row: usize,
     col: usize,
     action: MoveAction,
 }
 
-#[derive(Ord, Debug, Clone, Serialize, Deserialize, Apiv2Schema, Eq, PartialOrd, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, Apiv2Schema)]
 enum MoveAction {
     Reveal,
     MarkMine,
@@ -47,31 +47,31 @@ enum MoveAction {
 
 #[derive(Debug, Serialize, Deserialize, Apiv2Schema)]
 pub struct Minesweeper {
-    grid: Vec<Vec<Cell>>,
-    current: Cell,
-    steps: usize,
-    paths: BTreeSet<Cell>,
-    config: ConfigMinesweeper,
-    timer: GameTimer,
+    pub grid: Vec<Vec<Cell>>,
+    pub current: Cell,
+    pub steps: usize,
+    pub paths: BTreeSet<Cell>,
+    pub config: ConfigMinesweeper,
+    pub timer: GameTimer,
 }
 
 #[derive(Debug, Clone, Validate, Serialize, Deserialize, Apiv2Schema)]
-pub(crate) struct ConfigMinesweeper {
+pub struct ConfigMinesweeper {
     #[validate(minimum = 3, message = "Minimum is 3.")]
     #[validate(maximum = 10, message = "Maximum is 10")]
-    pub(crate) width: usize,
+    pub width: usize,
     #[validate(minimum = 3, message = "Minimum is 3.")]
     #[validate(maximum = 10, message = "Maximum is 10")]
-    pub(crate) height: usize,
-    pub(crate) num_mines: usize,
-    pub(crate) num_hints: usize,
-    pub(crate) num_blocks: usize,
+    pub height: usize,
+    pub num_mines: usize,
+    pub num_hints: usize,
+    pub num_blocks: usize,
 }
 
-#[derive(Ord, Debug, Clone, Serialize, Deserialize, Apiv2Schema, Eq, PartialOrd, PartialEq)]
-struct GameTimer {
-    start_time: Option<u64>,
-    end_time: Option<u64>,
+#[derive(Debug, Clone, Serialize, Deserialize, Apiv2Schema)]
+pub struct GameTimer {
+    pub start_time: Option<u64>,
+    pub end_time: Option<u64>,
 }
 
 impl Clone for Minesweeper {
@@ -88,7 +88,7 @@ impl Clone for Minesweeper {
 }
 
 impl Cell {
-    pub(crate) fn new(content: CellContent, row: usize, col: usize) -> Self {
+    pub fn new(content: CellContent, row: usize, col: usize) -> Self {
         Cell {
             content,
             row,
@@ -97,10 +97,11 @@ impl Cell {
             cell_num_mines: 0,
             cell_num_hints: 0,
             cell_num_block: 0,
+            neighbors: BTreeSet::new()
         }
     }
 
-    pub(crate) fn new_free(row: usize, col: usize) -> Self {
+    pub fn new_free(row: usize, col: usize) -> Self {
         Cell::new(Free, row, col)
     }
 
@@ -111,21 +112,21 @@ impl Cell {
 }
 
 impl GameTimer {
-    fn new() -> Self {
+    pub fn new() -> Self {
         GameTimer {
             start_time: None,
             end_time: None,
         }
     }
-    fn start(&mut self) {
+    pub fn start(&mut self) {
         self.start_time = Some(SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs());
     }
 
-    fn stop(&mut self) {
+    pub fn stop(&mut self) {
         self.end_time = Some(SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs());
     }
 
-    fn elapsed_time(&self) -> Option<Duration> {
+    pub fn elapsed_time(&self) -> Option<Duration> {
         match (self.start_time, self.end_time) {
             (Some(start), Some(end)) => {
                 let start_instant = UNIX_EPOCH + Duration::from_secs(start);
@@ -138,7 +139,7 @@ impl GameTimer {
 }
 
 impl Minesweeper {
-    fn new(grid: Vec<Vec<Cell>>,
+    pub fn new(grid: Vec<Vec<Cell>>,
            start: Cell,
            paths: BTreeSet<Cell>,
            config: ConfigMinesweeper,
@@ -166,7 +167,6 @@ impl Minesweeper {
             start_time: None,
             end_time: None,
         };
-        let properties = Config::get_properties().minesweeper();
 
         let mut game = Minesweeper {
             grid,
@@ -295,7 +295,7 @@ impl Minesweeper {
         sub_row.abs() <= 1 && sub_col.abs() <= 1 && (sub_row != 0 || sub_col != 0)
     }
 
-    fn move_to(&mut self, new_row: usize, new_col: usize) {
+    pub fn move_to(&mut self, new_row: usize, new_col: usize) {
         if self.is_valid_movement(new_row, new_col) {
             self.current = self.grid[new_row][new_col].clone();
             self.steps += 1;
@@ -315,4 +315,16 @@ fn create_grid(height: usize, width: usize) -> Vec<Vec<Cell>> {
         grid.push(row_vec);
     }
     grid
+}
+
+impl ConfigMinesweeper {
+    pub fn from(default: MinesweeperDefault) -> Self {
+        Self {
+            width: default.width,
+            height: default.height,
+            num_mines: default.num_mines,
+            num_blocks: default.num_blocks,
+            num_hints: default.num_hints,
+        }
+    }
 }

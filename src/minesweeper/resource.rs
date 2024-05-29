@@ -1,26 +1,16 @@
-use std::sync::Mutex;
-
-use actix_web::HttpResponse;
-use once_cell::sync::Lazy;
-use paperclip::actix::{api_v2_operation, web::{self, Json, Scope}};
+use actix_web::{Error, HttpResponse};
+use paperclip::actix::{api_v2_operation, CreatedJson, web::{self, Json, Scope}};
 use serde_valid::Validate;
 
-use crate::minesweeper::board::{ConfigMinesweeper, Minesweeper};
+use crate::constant::{DEFAULT_MINESWEEPER, MINESWEEPER, TREE_NODE};
+use crate::minesweeper::board::{Cell, ConfigMinesweeper, Minesweeper};
+use crate::minesweeper::node::{Node};
 
- const CONFIG: ConfigMinesweeper = ConfigMinesweeper {
-    width: 5,
-    height: 5,
-    num_mines: 3,
-    num_hints: 3,
-    num_blocks: 3
-};
-static MINESWEEPER: Lazy<Mutex<Minesweeper>> = Lazy::new(|| Mutex::new(Minesweeper::new_random(CONFIG)));
-
-pub(crate) fn minesweeper_scope() -> Scope {
-    return web::scope("/minesweeper")
+pub fn minesweeper_scope() -> Scope {
+    web::scope("/minesweeper")
         .route("/start/default", web::get().to(default_minesweeper))
-        .route("/reset/default", web::get().to(reset_minesweeper))
-        .route("/start/random/", web::post().to(random_minesweeper));
+        .route("/reset/grid", web::get().to(reset_minesweeper))
+        .route("/start/random/", web::post().to(random_minesweeper))
 }
 
 #[api_v2_operation(tags(Minefield))]
@@ -36,11 +26,11 @@ async fn default_minesweeper() -> HttpResponse {
 }
 
 #[api_v2_operation(tags(Minefield))]
-/// Serviço para resetar o grid do jogo default
+/// Serviço para resetar o grid do jogo, seja o default ou random
 ///
 /// # Returns `Minesweeper`
 async fn reset_minesweeper() -> HttpResponse {
-    subscribe_minesweeper(Minesweeper::new_random(CONFIG));
+    subscribe_minesweeper(Minesweeper::new_random(DEFAULT_MINESWEEPER.clone()));
     HttpResponse::Ok().finish()
 }
 

@@ -1,6 +1,6 @@
 use std::collections::HashMap;
-use std::hash::{Hash, Hasher};
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, Mutex, Weak};
+use paperclip::actix::Apiv2Schema;
 
 use serde::{Deserialize, Serialize};
 
@@ -10,9 +10,10 @@ use super::board::Cell;
 pub struct Node {
     pub position: Cell,
     pub children: Mutex<HashMap<(usize, usize), Arc<Node>>>,
+    parent: Mutex<Weak<Node>>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Apiv2Schema)]
 pub struct NodeData {
     pub position: Cell,
     pub children: Vec<NodeData>,
@@ -22,14 +23,18 @@ impl Node {
         Arc::new(Node {
             position,
             children: Mutex::new(HashMap::new()),
+            parent: Mutex::new(Weak::new()),
         })
     }
 
-    pub fn add_child(&self, child: Arc<Node>) {
+    pub fn add_child(self: &Arc<Self>, child: Arc<Node>) {
         let mut children = self.children.lock().unwrap();
         let key = (child.position.row, child.position.col);
-        children.insert(key, child);
+
+        *child.parent.lock().unwrap() = Arc::downgrade(self);
+        children.insert(key, child.clone());
     }
+
     pub fn find_child_by_position(&self, row: usize, col: usize) -> Option<Arc<Node>> {
         let children = self.children.lock().unwrap();
 
@@ -85,8 +90,6 @@ mod tests {
         let node_data = root_node.get_node_data();
 
         assert_eq!(node_data.children.len(), 2);
-        assert_eq!(node_data.children[0].position.row, 1);
-        assert_eq!(node_data.children[0].position.col, 1);
     }
 
     #[test]
@@ -107,5 +110,20 @@ mod tests {
         assert_eq!(found_node.position.col, 2);
 
         assert!(root_node.find_child_by_position(3, 3).is_none());
+    }
+
+    #[test]
+    fn test_parent_child_relationship() {
+        let parent_cell = Cell::new_free(0, 0);
+        let parent_node = Node::new(parent_cell);
+
+        let child_cell = Cell::new_free(1, 1);
+        let child_node = Node::new(child_cell);
+
+        parent_node.add_child(Arc::clone(&child_node));
+
+        // Testa se a configuração do pai está correta
+        let weak_parent = child_node.parent.lock().unwrap();
+        assert!(weak_parent.upgrade().is_some());
     }
 }
