@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Input, Renderer2, ViewChild } from '@angular/core';
+import { Component, HostListener, Input, Renderer2, ViewChild } from '@angular/core';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { AnimationProp, FaIconComponent, FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';

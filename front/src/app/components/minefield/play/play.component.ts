@@ -1,9 +1,12 @@
 import { Component, Input } from '@angular/core';
+import { CellComponent } from '../cell/cell.component';
 
 @Component({
   selector: 'app-play',
   standalone: true,
-  imports: [],
+             imports: [
+               CellComponent
+             ],
   templateUrl: './play.component.html',
   styleUrl: './play.component.sass'
 })
