@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, Renderer2 } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, Output, Renderer2 } from '@angular/core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
@@ -27,18 +27,18 @@ export class CellComponent {
   hints: number = 0;
   @Input({ alias: 'blocks' })
   blocks: number = 0;
+  @Input({ alias: 'action', required: true })
+  isAction: boolean;
+
+  @Output('cellClicked')
+  cellClicked: EventEmitter<CellComponent>;
 
   constructor(private renderer: Renderer2,
               library: FaIconLibrary) {
     library.addIconPacks(fas, far);
-    this._isAction = false;
+    this.isAction = false;
     this._isRevealed = false;
-  }
-
-  private _isAction: boolean;
-
-  get isAction(): boolean {
-    return this._isAction;
+    this.cellClicked = new EventEmitter<CellComponent>();
   }
 
   private _isRevealed: boolean;
@@ -48,16 +48,20 @@ export class CellComponent {
   }
 
   public get isAnimation(): AnimationProp | undefined {
-    return this._isAction ? 'fade' : undefined;
+    return this.isAction ? 'fade' : undefined;
   }
 
   @HostListener('click')
   revealed() {
-    this._isAction = true;
-    this._isRevealed = true;
+    this.cellClicked.emit(this);
   }
 
   toReveal() {
     this._isRevealed = true;
+    this.isAction = true;
+  }
+
+  noAction() {
+    this.isAction = false;
   }
 }

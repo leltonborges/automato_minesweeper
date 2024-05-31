@@ -11,12 +11,21 @@ import { CellComponent } from '../cell/cell.component';
   styleUrl: './play.component.sass'
 })
 export class PlayComponent {
+  private _cellComponent!: CellComponent;
   @Input() cols: number = 5;
   @Input() rows: number = 5;
   rowsArray: number[] = [];
   colsArray: number[] = [];
 
   constructor() {}
+
+  cellClicked(cell: CellComponent) {
+    if (this._cellComponent) {
+      this._cellComponent.noAction();
+    }
+    cell.toReveal();
+    this._cellComponent = cell;
+  }
 
   ngOnInit(): void {
     this.rowsArray = Array.from({ length: this.rows }, (_, i) => i);
