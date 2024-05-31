@@ -6,7 +6,6 @@
         @for (col of colsArray; track col; let colIndex = $index) {
           <app-cell [col]="col"
                     [row]="row"
-                    [icon]="['fas', 'gift']"
                     [action]="false"
                     (cellClicked)="cellClicked($event)"
                     [content]="'free'"></app-cell>
