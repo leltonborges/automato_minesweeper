@@ -4,13 +4,14 @@ import { provideRouter } from '@angular/router';
 import { mainRoutes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { minefieldRoutes } from './components/minefield/minefield.routes';
+import { provideHttpClient, withFetch } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     // provideRouter([...mainRoutes, ...minefieldRoutes]),
     provideRouter(mainRoutes),
     provideClientHydration(),
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    provideHttpClient(withFetch())
   ]
 };
