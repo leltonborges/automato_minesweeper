@@ -1,4 +1,31 @@
-<section>
+<main>
+  <section [class.gamer-over]="gamerOver">
+    <ng-container *ngTemplateOutlet="ngPlay"></ng-container>
+  </section>
+  <section>
+    @if (isWinner && gamerOver) {
+      <ng-container *ngTemplateOutlet="ngWinner"></ng-container>
+    } @else if (gamerOver && !isWinner) {
+      <ng-container *ngTemplateOutlet="ngLoser"></ng-container>
+    }
+  </section>
+</main>
+
+<ng-template #ngWinner>
+  <div class="info-gamer">
+    <h1>Fim de jogo!!!!</h1>
+    <h2>WIIIIINER</h2>
+  </div>
+</ng-template>
+
+<ng-template #ngLoser>
+  <div class="info-gamer">
+    <h1>Fim de jogo!!!!</h1>
+    <h2>LOSEEER</h2>
+  </div>
+</ng-template>
+
+<ng-template #ngPlay>
   <div class="grid-container">
     @for (row of board.grid; track row) {
       <div class="row">
@@ -15,4 +42,4 @@
       </div>
     }
   </div>
-</section>
+</ng-template>

@@ -6,8 +6,8 @@
               (click)="toggleResult(drawer)">
         @if (isMenuOpen) {
           <mat-icon aria-hidden="false"
-          aria-label="Icone de fechar"
-          fontIcon="close"></mat-icon>
+                    aria-label="Icone de fechar"
+                    fontIcon="close"></mat-icon>
         } @else {
           <mat-icon aria-hidden="false"
                     aria-label="Icone do menu"
@@ -30,6 +30,11 @@
       <router-outlet></router-outlet>
     </mat-drawer-content>
   </mat-drawer-container>
-  <footer class="grid-footer">footer</footer>
+  <footer class="grid-footer">
+    <main class="footer">
+      <p>Lelton &amp; Suelen</p>
+      &copy;2024
+    </main>
+  </footer>
 </main>
 

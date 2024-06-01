@@ -5,6 +5,7 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { AnimationProp, FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule } from '@angular/common';
 import { IconService } from '../../../service/role/icon.service';
+import { CellType } from '../../../core/enum/CellType';
 
 @Component({
              selector: 'app-cell',
@@ -16,7 +17,7 @@ import { IconService } from '../../../service/role/icon.service';
 export class CellComponent
   implements OnInit {
   @Input({ alias: 'content', required: true })
-  content!: string;
+  content!: CellType;
   @Input({ alias: 'row', required: true })
   row!: number;
   @Input({ alias: 'col', required: true })
@@ -69,6 +70,10 @@ export class CellComponent
   }
 
   toReveal() {
+    this._isRevealed = true;
+  }
+
+  toRevealAndActive() {
     this._isRevealed = true;
     this.isAction = true;
   }

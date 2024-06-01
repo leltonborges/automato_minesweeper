@@ -17,9 +17,9 @@ export class MoveService {
     } else return false;
   }
 
-  canMove(cell: CellComponent,
-          col: number,
-          row: number) {
+  canMoveNeighbor(cell: CellComponent,
+                  col: number,
+                  row: number) {
     return NEIGHBORS.filter(this.checkCellMatch(cell, col, row)).length > 0;
   }
 

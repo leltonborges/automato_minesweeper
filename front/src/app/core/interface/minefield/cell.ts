@@ -1,5 +1,7 @@
+import { CellType } from '../../enum/CellType';
+
 export interface Cell {
-  content: string,
+  content: CellType,
   row: number,
   col: number,
   revealed: boolean,
