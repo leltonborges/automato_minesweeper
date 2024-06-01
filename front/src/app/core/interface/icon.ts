@@ -4,9 +4,9 @@ export type Icons = Map<string, IconProp>
 
 const map = new Map<string, IconProp>();
 
-map.set('free', ['fas', 'box-open']);
-map.set('mine', ['fas', 'bomb']);
-map.set('block', ['fas', 'road-barrier']);
-map.set('treasure', ['fas', 'gifts']);
+map.set('Free', ['fas', 'box-open']);
+map.set('Mine', ['fas', 'bomb']);
+map.set('Block', ['fas', 'road-barrier']);
+map.set('Treasure', ['fas', 'gifts']);
 
 export const ICONS_BOARD: Icons = map;

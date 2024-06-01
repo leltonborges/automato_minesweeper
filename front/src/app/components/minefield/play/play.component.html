@@ -1,5 +1,4 @@
 <section>
-  <!--  <i class="fa-regular fa-eye-slash"></i>-->
    <div class="grid-container">
     @for (row of rowsArray; track row; let rowIndex = $index) {
       <div class="row">
@@ -8,8 +7,7 @@
                     [row]="row"
                     [action]="false"
                     (cellClicked)="cellClicked($event)"
-                    [content]="'free'"></app-cell>
-          <!--                    [icon]="['far', 'eye-slash']"-->
+                    [content]="'Free'"></app-cell>
         }
       </div>
     }

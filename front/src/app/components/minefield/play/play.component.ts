@@ -1,42 +1,48 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CellComponent } from '../cell/cell.component';
 import { NotificationService } from '../../../service/role/notification.service';
 import { MoveService } from '../../../service/role/move.service';
+import { Board } from '../../../core/interface/minefield/board';
+import { MinefieldService } from '../../../service/minefield/minefield.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
              selector: 'app-play',
              standalone: true,
              imports: [
-               CellComponent
+               CellComponent,
+               HttpClientModule
              ],
              templateUrl: './play.component.html',
              styleUrl: './play.component.sass'
            })
-export class PlayComponent {
+export class PlayComponent
+  implements OnInit {
   private _cellComponent!: CellComponent;
   @Input() cols: number = 5;
   @Input() rows: number = 5;
   rowsArray: number[] = [];
   colsArray: number[] = [];
+  private _board!: Board;
 
   constructor(private _notifyService: NotificationService,
-              private _moveService: MoveService) {}
+              private _moveService: MoveService,
+              private minefieldService: MinefieldService) {}
 
   cellClicked(cell: CellComponent) {
     if (this.isEqualsCell(cell)) {
       this._notifyService.notify('Sua posição já é esta!');
-      return;
-    }
 
-    if (this._cellComponent) {
-      this._cellComponent.noAction();
-    }
+    } else {
 
-    if (this.canTransact(cell)) {
-      cell.toReveal();
-      this._cellComponent = cell;
-      this._notifyService.notify('Transação realizada!');
-    } else this._notifyService.notify('Vizinhação invalida!');
+      if (this.canTransact(cell)) {
+        if (this._cellComponent) this._cellComponent.noAction();
+
+        cell.toReveal();
+        this._cellComponent = cell;
+        this._notifyService.notify('Transação realizada!');
+      } else this._notifyService.notify('Vizinhação invalida!');
+    }
   }
 
   private isEqualsCell(cell: CellComponent): boolean {
@@ -54,5 +60,11 @@ export class PlayComponent {
   ngOnInit(): void {
     this.rowsArray = Array.from({ length: this.rows }, (_, i) => i);
     this.colsArray = Array.from({ length: this.cols }, (_, i) => i);
+
+    this.minefieldService.getDefaultBoard();
+    // this._activatedRoute.data.subscribe(({ board }) => {
+    //   // this._board = board;
+    //   console.log(board);
+    // });
   }
 }
