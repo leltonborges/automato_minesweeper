@@ -1,3 +1,4 @@
+use actix_cors::Cors;
 use actix_web::{App, HttpServer};
 use paperclip::actix::OpenApiExt;
 
@@ -14,8 +15,14 @@ pub mod constant;
 async fn main() -> std::io::Result<()> {
     let config = Config::get_properties();
     HttpServer::new(move|| {
+        let cors = Cors::default()
+                                .allow_any_header()
+                                .allow_any_method()
+                                .allow_any_origin()
+                                .max_age(3600);
         App::new()
             .wrap_api_with_spec(api_config())
+            .wrap(cors)
             .service(minesweeper_scope())
             .with_json_spec_at("/api/spec/v2")
             .with_json_spec_v3_at("/api/spec/v3")

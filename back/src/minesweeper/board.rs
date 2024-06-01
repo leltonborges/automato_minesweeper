@@ -15,7 +15,7 @@ pub enum CellContent {
     Treasure,
     Mine,
     Block,
-    Hint(String),
+    Hint,
     Free,
 }
 
@@ -257,7 +257,7 @@ impl Minesweeper {
 
     fn add_hint(&mut self, row: usize, col: usize) {
         if self.grid[row][col].content == Free {
-            self.grid[row][col].content = Hint("Perto do tesouro".to_string());
+            self.grid[row][col].content = Hint;
             self.grid[row][col].cell_num_hints += 1;
         }
     }
