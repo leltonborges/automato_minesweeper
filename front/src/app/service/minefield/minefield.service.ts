@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environment/environment';
 import { HttpClient } from '@angular/common/http';
 import { Board } from '../../core/interface/minefield/board';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Config } from '../../core/interface/minefield/config';
 
 @Injectable({
@@ -13,11 +13,8 @@ export class MinefieldService {
 
   constructor(private http: HttpClient) { }
 
-  getDefaultBoard(): Observable<String> {
-    console.log(`api: ${ this.apiUrl }`);
-    this.http.get<Board>(`${ this.apiUrl }/minesweeper/start/default`)
-        .subscribe({ next: body => console.log(body) });
-    return new BehaviorSubject('');
+  getDefaultBoard(): Observable<Board> {
+    return this.http.get<Board>(`${ this.apiUrl }/minesweeper/start/default`);
   }
 
   getRandomBoard(config: Config): Observable<Board> {

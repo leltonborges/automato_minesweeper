@@ -8,3 +8,7 @@ export interface Cell {
   cell_num_block: number,
   neighbors: Array<Cell>
 }
+
+export type Cells = Array<Cell>;
+
+export type MatrixCell = Array<Cells>;

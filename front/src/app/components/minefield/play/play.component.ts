@@ -3,8 +3,8 @@ import { CellComponent } from '../cell/cell.component';
 import { NotificationService } from '../../../service/role/notification.service';
 import { MoveService } from '../../../service/role/move.service';
 import { Board } from '../../../core/interface/minefield/board';
-import { MinefieldService } from '../../../service/minefield/minefield.service';
 import { HttpClientModule } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
              selector: 'app-play',
@@ -27,7 +27,8 @@ export class PlayComponent
 
   constructor(private _notifyService: NotificationService,
               private _moveService: MoveService,
-              private minefieldService: MinefieldService) {}
+              private _activatedRoute: ActivatedRoute) {
+  }
 
   cellClicked(cell: CellComponent) {
     if (this.isEqualsCell(cell)) {
@@ -57,14 +58,16 @@ export class PlayComponent
     } else return true;
   }
 
+  get board(): Board {
+    return this._board;
+  }
+
   ngOnInit(): void {
     this.rowsArray = Array.from({ length: this.rows }, (_, i) => i);
     this.colsArray = Array.from({ length: this.cols }, (_, i) => i);
 
-    this.minefieldService.getDefaultBoard();
-    // this._activatedRoute.data.subscribe(({ board }) => {
-    //   // this._board = board;
-    //   console.log(board);
-    // });
+    this._activatedRoute.data.subscribe(({ board }) => {
+      this._board = board;
+    });
   }
 }

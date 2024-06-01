@@ -1,13 +1,16 @@
 <section>
-   <div class="grid-container">
-    @for (row of rowsArray; track row; let rowIndex = $index) {
+  <div class="grid-container">
+    @for (row of board.grid; track row) {
       <div class="row">
-        @for (col of colsArray; track col; let colIndex = $index) {
-          <app-cell [col]="col"
-                    [row]="row"
+        @for (col of row; track col) {
+          <app-cell [col]="col.col"
+                    [row]="col.row"
+                    [mines]="col.cell_num_mines"
+                    [blocks]="col.cell_num_block"
+                    [hints]="col.cell_num_hints"
                     [action]="false"
                     (cellClicked)="cellClicked($event)"
-                    [content]="'Free'"></app-cell>
+                    [content]="col.content"></app-cell>
         }
       </div>
     }
