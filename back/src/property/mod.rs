@@ -22,8 +22,8 @@ pub struct Application {
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct Server {
-    pub port: u16,
-    pub host: String,
+    pub port: u16
+    // pub host: String,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -60,9 +60,6 @@ impl Config {
     }
     pub fn description(&self) -> String {
         self.application.description.clone()
-    }
-    pub fn host(&self) -> String {
-        self.server.host.clone()
     }
     pub fn port(&self) -> u16 {
         self.server.port.clone()

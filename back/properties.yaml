@@ -3,7 +3,6 @@ application:
   description: Gamer Minefield
 server:
   port: 8090
-  host: localhost
   context: /v1
 minesweeper:
     start:
