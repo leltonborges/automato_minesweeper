@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output, Renderer2 } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
@@ -30,22 +30,23 @@ export class CellComponent
   blocks: number = 0;
   @Input({ alias: 'action', required: true })
   isAction: boolean;
+  @Input({ alias: 'start', required: true })
+  isStart: boolean;
 
   @Output('cellClicked')
   cellClicked: EventEmitter<CellComponent>;
 
-  constructor(private renderer: Renderer2,
-              private iconService: IconService,
+  private _icon!: IconProp;
+  private _isRevealed: boolean;
+
+  constructor(private iconService: IconService,
               library: FaIconLibrary) {
     library.addIconPacks(fas, far);
     this.isAction = false;
     this._isRevealed = false;
     this.cellClicked = new EventEmitter<CellComponent>();
+    this.isStart = false;
   }
-
-
-  private _icon!: IconProp;
-  private _isRevealed: boolean;
 
   get icon(): IconProp {
     return this._icon;
@@ -58,6 +59,7 @@ export class CellComponent
   ngOnInit(): void {
     const cellIcon = this.iconService.boardIcon(this.content);
     if (cellIcon) this._icon = cellIcon;
+    if (this.isStart) this.isAction = true;
   }
 
   public get isAnimation(): AnimationProp | undefined {

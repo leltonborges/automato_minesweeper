@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatButtonModule } from '@angular/material/button';
 import { CellComponent } from '../cell/cell.component';
 import { NotificationService } from '../../../service/role/notification.service';
 import { MoveService } from '../../../service/role/move.service';
 import { Board } from '../../../core/interface/minefield/board';
-import { HttpClientModule } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
 import { CellType } from '../../../core/enum/CellType';
 import { CommonModule } from '@angular/common';
+import { MinefieldService } from '../../../service/minefield/minefield.service';
 
 @Component({
              selector: 'app-play',
@@ -14,7 +17,9 @@ import { CommonModule } from '@angular/common';
              imports: [
                CellComponent,
                HttpClientModule,
-               CommonModule
+               CommonModule,
+               MatButtonModule,
+               MatDividerModule
              ],
              templateUrl: './play.component.html',
              styleUrl: './play.component.sass'
@@ -24,22 +29,22 @@ export class PlayComponent
   private _cellComponent!: CellComponent;
   private _board!: Board;
   private _hasHint: boolean;
+  private _gamerOver: boolean;
+  private _isWinner: boolean;
 
   constructor(private _notifyService: NotificationService,
               private _moveService: MoveService,
-              private _activatedRoute: ActivatedRoute) {
+              private _minefieldService: MinefieldService,
+              private _activatedRoute: ActivatedRoute,
+              private _router: Router) {
     this._gamerOver = false;
     this._hasHint = false;
     this._isWinner = false;
   }
 
-  private _gamerOver: boolean;
-
   get gamerOver(): boolean {
     return this._gamerOver;
   }
-
-  private _isWinner: boolean;
 
   get isWinner(): boolean {
     return this._isWinner;
@@ -49,9 +54,19 @@ export class PlayComponent
     this._activatedRoute.data.subscribe(({ board }) => {
       this._board = board;
     });
+
+    if (this._board) {
+      const current = this.board.current;
+      this._board.grid[current.row][current.col].isStart = true;
+    }
   }
 
   cellClicked(cell: CellComponent) {
+    if (!this._cellComponent && !cell.isStart) {
+      this._notifyService.notify('Posição de inicio invalida!');
+      return;
+    }
+
     if (this.isSameCellClickedAgain(cell)) {
       return;
     }
@@ -144,5 +159,23 @@ export class PlayComponent
       const row: number = this._cellComponent.row;
       return this._moveService.canMoveNeighbor(cell, col, row);
     } else return true;
+  }
+
+  resetBoard() {
+    this._notifyService.notify('Criando uma nova partida');
+    this._minefieldService
+        .resetBoard()
+        .subscribe({ complete: () => this.reload() });
+  }
+
+  reStartBoard() {
+    this._notifyService.notify('Recarregando à pagina');
+    this.reload();
+  }
+
+  private reload() {
+    setTimeout(() => {
+      window.location.reload();
+    }, 3000);
   }
 }

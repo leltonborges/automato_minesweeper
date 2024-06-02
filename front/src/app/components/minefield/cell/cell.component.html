@@ -1,6 +1,7 @@
 <div class="card">
   <div class="cell"
        [class.active]="isAction"
+       [class.start]="isStart && !isRevealed"
        [class]="isRevealed? 'revealed': 'undisclosed'">
     <fa-icon [icon]="isRevealed? icon: ['fas', 'question']"
              [animation]="isAnimation"

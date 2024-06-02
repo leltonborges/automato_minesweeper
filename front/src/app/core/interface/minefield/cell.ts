@@ -8,6 +8,7 @@ export interface Cell {
   cell_num_mines: number,
   cell_num_hints: number,
   cell_num_block: number,
+  isStart: boolean,
   neighbors: Array<Cell>
 }
 
