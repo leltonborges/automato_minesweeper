@@ -154,14 +154,9 @@ impl Minesweeper {
         }
     }
 
-    fn get_start() -> Cell {
-        let properties = Config::get_properties().minesweeper();
-        let mut cell = Cell::new_free(properties.start.row, properties.start.col);
-        cell.reveal()
-    }
-
     pub fn new_random(config: ConfigMinesweeper) -> Self {
-        let grid = create_grid(config.height, config.width);
+        let mut grid = create_grid(config.height, config.width);
+        let start = Self::apply_start(&mut grid);
 
         let timer = GameTimer {
             start_time: None,
@@ -170,7 +165,7 @@ impl Minesweeper {
 
         let mut game = Minesweeper {
             grid,
-            current: Self::get_start(),
+            current: start,
             steps: 0,
             paths: BTreeSet::new(),
             config,
@@ -178,8 +173,14 @@ impl Minesweeper {
         };
 
         game.random_mines().random_blocks().place_treasure(None);
-
         game
+    }
+
+    fn apply_start(grid: &mut Vec<Vec<Cell>>) -> Cell {
+        let properties = Config::get_properties().minesweeper();
+        let start = Cell::new_free(properties.start.row, properties.start.col);
+        grid[start.row][start.col] = start.clone();
+        start
     }
 
     fn apply_random_content(&mut self, cell_content: CellContent, total_num: usize) {
