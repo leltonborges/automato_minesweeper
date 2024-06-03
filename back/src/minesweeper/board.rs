@@ -155,8 +155,8 @@ impl Minesweeper {
     }
 
     pub fn new_random(config: ConfigMinesweeper) -> Self {
-        let mut grid = create_grid(config.height, config.width);
-        let start = Self::apply_start(&mut grid);
+        let mut grid = create_grid(config.height.clone(), config.width);
+        let start = Self::apply_start(&mut grid, config.height.clone());
 
         let timer = GameTimer {
             start_time: None,
@@ -176,9 +176,9 @@ impl Minesweeper {
         game
     }
 
-    fn apply_start(grid: &mut Vec<Vec<Cell>>) -> Cell {
+    fn apply_start(grid: &mut Vec<Vec<Cell>>, height: usize) -> Cell {
         let properties = Config::get_properties().minesweeper();
-        let start = Cell::new_free(properties.start.row, properties.start.col);
+        let start = Cell::new_free(height - 1, 0);
         grid[start.row][start.col] = start.clone();
         start
     }
