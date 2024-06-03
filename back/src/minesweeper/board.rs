@@ -6,7 +6,7 @@ use rand::{Rng, thread_rng};
 use serde::{Deserialize, Serialize};
 use serde_valid::Validate;
 
-use crate::constant::MOVEMENTS;
+use crate::constant::{MOVEMENTS, process_rule};
 use crate::minesweeper::board::CellContent::{Block, Free, Hint, Mine, Treasure};
 use crate::property::{Config, MinesweeperDefault};
 
@@ -56,11 +56,12 @@ pub struct Minesweeper {
 }
 
 #[derive(Debug, Clone, Validate, Serialize, Deserialize, Apiv2Schema)]
+#[validate(custom(|s| board_validation(s.clone())))]
 pub struct ConfigMinesweeper {
-    #[validate(minimum = 3, message = "Minimum is 3.")]
+    #[validate(minimum = 5, message = "Minimum is 5.")]
     #[validate(maximum = 10, message = "Maximum is 10")]
     pub width: usize,
-    #[validate(minimum = 3, message = "Minimum is 3.")]
+    #[validate(minimum = 5, message = "Minimum is 5.")]
     #[validate(maximum = 10, message = "Maximum is 10")]
     pub height: usize,
     pub num_mines: usize,
@@ -177,7 +178,6 @@ impl Minesweeper {
     }
 
     fn apply_start(grid: &mut Vec<Vec<Cell>>, height: usize) -> Cell {
-        let properties = Config::get_properties().minesweeper();
         let start = Cell::new_free(height - 1, 0);
         grid[start.row][start.col] = start.clone();
         start
@@ -304,6 +304,11 @@ impl Minesweeper {
             self.grid[new_row][new_col].revealed = true;
         }
     }
+    fn get_position_role(&self)-> (usize, usize){
+        let row = process_value(self.config.height);
+        let col = process_value(self.config.width);
+        (row, col)
+    }
 }
 
 fn create_grid(height: usize, width: usize) -> Vec<Vec<Cell>> {
@@ -318,6 +323,10 @@ fn create_grid(height: usize, width: usize) -> Vec<Vec<Cell>> {
     grid
 }
 
+fn process_value(prop: usize) -> usize {
+    (process_rule() % prop as f32) as usize
+}
+
 impl ConfigMinesweeper {
     pub fn from(default: MinesweeperDefault) -> Self {
         Self {
@@ -327,5 +336,17 @@ impl ConfigMinesweeper {
             num_blocks: default.num_blocks,
             num_hints: default.num_hints,
         }
+    }
+    pub fn valid_configs(&self) -> bool {
+        let grid_size = (self.width * self.height) as f32;
+        let percentage = (self.num_mines + self.num_blocks + self.num_hints) as f32 * 100.0 / grid_size;
+        percentage <= 36.0
+    }
+}
+
+fn board_validation(config: ConfigMinesweeper) -> Result<(), serde_valid::validation::Error> {
+    match config.valid_configs(){
+        true => Ok(()),
+        _ => Err(serde_valid::validation::Error::Custom("A soma de minas, dicas e bloqueios ultrapassa 36% do board.".to_string()))
     }
 }

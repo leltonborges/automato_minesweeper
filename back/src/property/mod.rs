@@ -28,18 +28,11 @@ pub struct Server {
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct MinesweeperDefault {
-    pub start: Start,
     pub width: usize,
     pub height: usize,
     pub num_mines: usize,
     pub num_hints: usize,
-    pub num_blocks: usize,
-}
-
-#[derive(Debug, Deserialize, Clone)]
-pub struct Start {
-    pub row: usize,
-    pub col: usize,
+    pub num_blocks: usize
 }
 
 pub fn load_properties() -> Result<Config, Box<dyn Error>> {

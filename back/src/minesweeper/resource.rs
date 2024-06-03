@@ -30,8 +30,14 @@ async fn default_minesweeper() -> HttpResponse {
 ///
 /// # Returns `Minesweeper`
 async fn reset_minesweeper() -> HttpResponse {
-    subscribe_minesweeper(Minesweeper::new_random(DEFAULT_MINESWEEPER.clone()));
-    HttpResponse::Ok().finish()
+    let config = DEFAULT_MINESWEEPER.clone();
+    match config.validate() {
+        Ok(_) => {
+           subscribe_minesweeper(Minesweeper::new_random(config));
+            HttpResponse::Ok().finish()
+        }
+        Err(e) => HttpResponse::BadRequest().json(e)
+    }
 }
 
 fn subscribe_minesweeper(minesweeper: Minesweeper) {
