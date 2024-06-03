@@ -4,6 +4,10 @@ services:
     build: 
       context: ./back
       dockerfile: Dockerfile
+      labels:
+        - project=minefield
+        - autor=leltondev
+        - description=back-minefield
     image: leltondev/back-minefield:latest
     ports:
       - "8090:8090"
@@ -14,6 +18,10 @@ services:
     build: 
       context: ./front
       dockerfile: Dockerfile
+      labels:
+        - project=minefield
+        - autor=leltondev
+        - description=back-minefield
     image: leltondev/front-minefield:latest
     ports:
       - "80:80"

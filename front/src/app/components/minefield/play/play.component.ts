@@ -95,12 +95,16 @@ export class PlayComponent
   }
 
   private processCellAction(cell: CellComponent) {
-    if (this.isBlockCell(cell)) {
+    if (this._hasHint) {
+      cell.toReveal();
+      this._hasHint = false;
+      this._notifyService.notify('Dica usada!');
+    } else if (this.isBlockCell(cell)) {
       cell.toReveal();
       this._notifyService.notify('Uma posição bloqueada encontrada!');
     } else {
       this._cellComponent && this._cellComponent.noAction();
-      if (this.isHintCell(cell)) {
+      if (this.isHintCell(cell) && !cell.isRevealed) {
         this._hasHint = true;
         this._notifyService.notify('Você encontrou um ajuda!');
       } else if (this.isMineCell(cell)) {
