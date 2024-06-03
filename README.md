@@ -9,6 +9,9 @@
 	    - [Run](#run)
 - [Autômato](#autômato)
 	- [Caça ao tesouro - Campo Minado](#caça-ao-tesouro---campo-minado)
+	- [Definições](#definições)
+	- [Configurações](#configurações)
+	- [Regras de transição](#regras-de-transição)
 # Configurações e Instalações
 ## Instalação
 Dependências necessárias para o build do projeto
