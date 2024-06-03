@@ -95,14 +95,14 @@ Necessário executar o arquivo `docker-compose-run.yaml`
 version: '3.9'
 services:
   back:
-    image: leltondev/back-minefield:1.0.1
+    image: leltondev/back-minefield:latest
     ports:
       - "8090:8090"
     networks:
       - net-automato
   
   front:
-    image: leltondev/front-minefield:1.0.1
+    image: leltondev/front-minefield:latest
     ports:
       - "80:80"
     networks:
@@ -131,7 +131,7 @@ services:
     build: 
       context: ./back
       dockerfile: Dockerfile
-    image: leltondev/back-minefield:1.0.1
+    image: leltondev/back-minefield:latest
     ports:
       - "8090:8090"
     networks:
@@ -141,7 +141,7 @@ services:
     build: 
       context: ./front
       dockerfile: Dockerfile
-    image: leltondev/front-minefield:1.0.1
+    image: leltondev/front-minefield:latest
     ports:
       - "80:80"
     networks:
