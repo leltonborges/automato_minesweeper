@@ -160,6 +160,32 @@ docker-compose -f docker-compose-build.yaml up --build --remove-orphans
 docker-compose -f docker-compose-build.yaml down --remove-orphans   
 ```
 # Autômato
+## Automato Celulares
+Automatos celulares é modelo discreto de computação estudado na teoria dos
+autômatos. Estes se encontram em várias áreas, incluindo Biologia Teórica,
+chamada também de Biomatemática, é um círculo de indagação interdisciplinar
+focado na modelação dos processos biológicos empregando técnicas matemáticas,
+envolvendo em um todo matemática e computação.
+
+Autômatos celulares são sistemas computacionais dinâmicos, totalmente discretos
+(estados, espaço e tempo) e distribuídos espacialmente, contendo componentes
+simples e idênticos e interações locais que geram comportamentos globais. Os
+autômatos celulares foram propostos originalmente por **Von Neumann** e **Ulam**
+como uma possível idealização de sistemas biológicos, com a proposta de modelar
+a auto-reprodução biológica \[Wolfram 1983\].
+
+Um autômato celular (AC) é definido por seu espaço celular e sua regra de
+transição. O espaço celular é composto por um reticulado de N células idênticas
+dispostas em um arranjo d-dimensional, cada um com um padrão idêntico de
+conexões locais entre as células e com condições de contorno definidas. A regra de
+transição fornece o estado da célula no próximo passo de tempo baseado na
+configuração da vizinhança atual. Todas as células do reticulado são atualizadas de
+acordo com esta regra \[Oliveira 2003\].
+
+O exemplo mais conhecido de autômato celular bidimensional é o chamado Game
+of Life. O modelo foi proposto por John Conway em 1970 e foi primeiramente
+publicado em \[Gardner 1970\]. Consiste em um autômato celular bidimensional, de
+raio 1 e com vizinhança de Moore
 ## Caça ao tesouro - Campo Minado
 O jogo  é uma abordagem para o estudo de autômatos na Ciência da Computação, com o objetivo de percorrer um grid(Campo)  X , onde  representa a quantidade de linhas e colunas. Linguagem de programação utilizadas: Angular V17+ e Rust Lang V1.78.0 e Linux(Fedora 37), o ilustrativo acessível  foi desenvolvido em Angular e as regras e cálculos em Rust Lang.
 
@@ -174,7 +200,7 @@ O jogo  é uma abordagem para o estudo de autômatos na Ciência da Computação
 - As transações são feitas para todas as suas vizinhas, mesmo que seja, para um vizinho já revelado
 - Uma célula revelada está em seu estado final, não é possível revertê-la.
 ## Configurações
-- Por padrão o jogo tem um $grid  = 5$, ou seja, um grid $5X5$, que corresponde ao menor grid, sua definição em função é: $x \in \mathbb{N} \rightarrow x >= 5$;
+- Por padrão o jogo tem um $\text{grid}\:=\: 5$, ou seja, um grid $5X5$, que corresponde ao menor grid, sua definição em função é: $x \in \mathbb{N} \rightarrow x >= 5$;
 - O conteúdo da célula se dar pela função:  $x \in \mathbb{N} \rightarrow x = (\pi * \beta) \: mod \: 4$, onde $\beta$ é o nanosegundo atual.
 	- Logo, se $c = 0$, então o tipo de célula será  Mina($m$)
 	- $c = 1$, então o tipo da célula é Bloqueio($b$)
