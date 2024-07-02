@@ -1,0 +1,6 @@
+[submodule "minesweeper_back"]
+	path = minesweeper_back
+	url = git@github.com:leltonborges/minesweeper_back.git
+[submodule "minesweeper_front"]
+	path = minesweeper_front
+	url = git@github.com:leltonborges/minesweeper_front.git
